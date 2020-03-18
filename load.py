@@ -3,7 +3,7 @@ import torch
 from sklearn.preprocessing import LabelEncoder
 
 
-def load_data(path, batch_size, tokens_column, predict_column, lang_model, max_len, separator, pad_label, device):
+def load_data(path, batch_size, tokens_column, predict_column, lang_model, max_len, separator, pad_label, device, label_encoder=None):
     tokenizer = AutoTokenizer.from_pretrained(lang_model)
     cls_token_id = tokenizer.cls_token_id
     sep_token_id = tokenizer.sep_token_id
@@ -45,15 +45,17 @@ def load_data(path, batch_size, tokens_column, predict_column, lang_model, max_l
 
     assert len(list_all_tokens) == len(list_all_labels) == len(list_all_masks)
 
-    label_encoder = LabelEncoder()
-    label_encoder.fit(sum(list_all_labels, []))
+    if label_encoder is None:
+        label_encoder = LabelEncoder()
+        label_encoder.fit(sum(list_all_labels, []))
+
     list_all_encoded_labels = [torch.tensor(label_encoder.transform(list_labels)) for list_labels in list_all_labels]
 
     X = torch.nn.utils.rnn.pad_sequence(list_all_tokens, batch_first=True, padding_value=tokenizer.pad_token_id).to(device)
     y = torch.nn.utils.rnn.pad_sequence(list_all_encoded_labels, batch_first=True, padding_value=0).to(device)
     masks = torch.nn.utils.rnn.pad_sequence(list_all_masks, batch_first=True, padding_value=0).to(device)
 
-    dataset = torch.utils.data.TensorDataset(X, y, masks)
+    dataset = torch.utils.data.TensorDataset(X, y)
     loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
-    return loader
+    return loader, label_encoder

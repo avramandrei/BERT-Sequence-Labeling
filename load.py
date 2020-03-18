@@ -3,7 +3,7 @@ import torch
 from sklearn.preprocessing import LabelEncoder
 
 
-def load_data(path, batch_size, tokens_column, predict_column, lang_model, max_len, separator, pad_label, device, label_encoder=None):
+def load_data_from_file(path, batch_size, tokens_column, predict_column, lang_model, max_len, separator, pad_label, device, label_encoder=None):
     tokenizer = AutoTokenizer.from_pretrained(lang_model)
     cls_token_id = tokenizer.cls_token_id
     sep_token_id = tokenizer.sep_token_id
@@ -55,7 +55,28 @@ def load_data(path, batch_size, tokens_column, predict_column, lang_model, max_l
     y = torch.nn.utils.rnn.pad_sequence(list_all_encoded_labels, batch_first=True, padding_value=0).to(device)
     masks = torch.nn.utils.rnn.pad_sequence(list_all_masks, batch_first=True, padding_value=0).to(device)
 
-    dataset = torch.utils.data.TensorDataset(X, y)
+    dataset = torch.utils.data.TensorDataset(X, y, masks)
     loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
     return loader, label_encoder
+
+
+def load_data(train_path, dev_path, batch_size, tokens_column, predict_column, lang_model, max_len, separator, pad_label, device):
+    train_loader, label_encoder = load_data_from_file(train_path,
+                                                      batch_size,
+                                                      tokens_column, predict_column,
+                                                      lang_model,
+                                                      max_len,
+                                                      separator, pad_label,
+                                                      device)
+
+    dev_loader, _ = load_data_from_file(dev_path,
+                                        batch_size,
+                                        tokens_column, predict_column,
+                                        lang_model,
+                                        max_len,
+                                        separator, pad_label,
+                                        device,
+                                        label_encoder)
+
+    return train_loader, dev_loader, label_encoder

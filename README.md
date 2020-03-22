@@ -21,7 +21,7 @@ For instance, to train a POS tagger on [UD English EWT](https://universaldepende
 command:
 
 ```
-python3 train.py [path_to_train_ewt] [path_to_dev_ewt] 3 --token_column 1
+python3 train.py [path_train_ewt] [path_dev_ewt] 3 --token_column 1
 ```
 
 This will automatically start training a `bert-base-cased` model. To change the model use the `--lang_model_name` argument.
@@ -31,5 +31,5 @@ This will automatically start training a `bert-base-cased` model. To change the 
 Use the `predict.py` script to infer new values. For instance, predict the POS of the [UD English EWT](https://universaldependencies.org/treebanks/en_ewt/index.html) test file:
 
 ```
-python3 predict.py [test_path] [model_path] 3
+python3 predict.py [path_test_ewt] [model_path] 3
 ```

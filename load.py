@@ -34,6 +34,9 @@ def load_data_from_file(path,
                     token = tokens[tokens_column]
                     label = tokens[predict_column].replace("\n", "")
 
+                    if "-" in label:
+                        label = label[2:]
+
                     # subtokenize each token
                     subtokens = tokenizer.encode(token, add_special_tokens=False)
 

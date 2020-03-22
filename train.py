@@ -43,7 +43,7 @@ def train_model(model,
             else:
                 crf_mask = torch.tensor([mask[i][j] if train_y[i][j] != label_encoder.transform([args.null_label])[0] else 0
                                          for i in range(train_y.shape[0]) for j in range(train_y.shape[1])],
-                                        dtype=torch.uint8).reshape(args.batch_size, -1).to(device)
+                                        dtype=torch.uint8).reshape(train_y.shape[0], -1).to(device)
 
                 loss = - criterion(logits.to(device), train_y, reduction="token_mean", mask=crf_mask)
 
@@ -71,9 +71,9 @@ def train_model(model,
                 loss = criterion(logits.reshape(-1, num_classes).to(device), dev_y.reshape(-1).to(device))
             else:
                 crf_mask = torch.tensor(
-                    [mask[i][j] if train_y[i][j] != label_encoder.transform([args.null_label])[0] else 0
-                     for i in range(train_y.shape[0]) for j in range(dev_y.shape[1])],
-                    dtype=torch.uint8).reshape(args.batch_size, -1).to(device)
+                    [mask[i][j] if dev_y[i][j] != label_encoder.transform([args.null_label])[0] else 0
+                     for i in range(dev_y.shape[0]) for j in range(dev_y.shape[1])],
+                    dtype=torch.uint8).reshape(dev_y.shape[0], -1).to(device)
 
                 loss = - criterion(logits.to(device), dev_y, reduction="token_mean", mask=crf_mask)
 

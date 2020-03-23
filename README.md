@@ -32,9 +32,9 @@ The files used for training, validation and testing must be in a format similar 
 10	.	.	PUNCT	.	_	2	punct	2:punct	_
 ```
 
-# Training
+## Training
 
-To train a model, use the `train.py` script. This will start training a model that must predict the labels of the column from the input files specified by the `[predict_column]` parameter. 
+To train a model, use the `train.py` script. This will start training a model that will predict the labels of the column specified by the `[predict_column]` argument.
 
 ```
 python3 train.py [path_train_file] [path_dev_file] [tokens_column] [predict_column] [lang_model_name]
@@ -47,4 +47,16 @@ To predict new values, use the `predict.py` script. This will create a new file 
 ```
 python3 predict.py [path_test_file] [model_path] [tokens_column] [predict_column] [lang_model_name]
 ```
+
+## Results
+
+#### English EWT
+
+| model | upos | xpos | 
+| --- | --- | --- |
+| bert-base-cased | - | - |
+| roberta-base | - | - |
+| distilbert-base-cased | - | - |
+
+
 

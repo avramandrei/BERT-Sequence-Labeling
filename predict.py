@@ -31,7 +31,7 @@ def main():
 
     list_labels = []
 
-    for i, (test_x, _, mask) in enumerate(test_loader):
+    for i, (test_x, _, mask, _) in enumerate(test_loader):
         print("Predicting tags for sequence: {}/{}...".format(i, len(test_loader.dataset)))
         logits = model.forward(test_x, mask)
         preds = torch.argmax(logits, 2)

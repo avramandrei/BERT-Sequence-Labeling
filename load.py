@@ -21,6 +21,7 @@ def load_data_from_file(path,
     list_all_tokens = []
     list_all_labels = []
     list_all_masks = []
+    list_all_crf_masks = []
 
     with open(path, "r", encoding='utf-8') as file:
         list_tokens = []
@@ -33,9 +34,6 @@ def load_data_from_file(path,
 
                     token = tokens[tokens_column]
                     label = tokens[predict_column].replace("\n", "")
-
-                    if "-" in label:
-                        label = label[2:]
 
                     # subtokenize each token
                     subtokens = tokenizer.encode(token, add_special_tokens=False)
@@ -58,6 +56,9 @@ def load_data_from_file(path,
                         # create the mask - ignore all tokens from [SEP] token onwards
                         list_all_masks.append(torch.tensor([1] * (len(list_tokens) + 2)))
 
+                        list_all_crf_masks.append(torch.tensor([1 if label != null_label else 0
+                                                                for label in list_all_labels[-1]], dtype=torch.uint8))
+
                     assert len(list_tokens) == len(list_labels)
 
                     list_tokens = []
@@ -77,9 +78,10 @@ def load_data_from_file(path,
     X = torch.nn.utils.rnn.pad_sequence(list_all_tokens, batch_first=True, padding_value=tokenizer.pad_token_id).to(device)
     y = torch.nn.utils.rnn.pad_sequence(list_all_encoded_labels, batch_first=True, padding_value=label_encoder.transform([pad_label])[0]).to(device)
     masks = torch.nn.utils.rnn.pad_sequence(list_all_masks, batch_first=True, padding_value=0).to(device)
+    crf_mask = torch.nn.utils.rnn.pad_sequence(list_all_crf_masks, batch_first=True, padding_value=0).to(device)
 
     # create the loader
-    dataset = torch.utils.data.TensorDataset(X, y, masks)
+    dataset = torch.utils.data.TensorDataset(X, y, masks, crf_mask)
     loader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
 
     return loader, label_encoder

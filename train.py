@@ -32,7 +32,7 @@ def train_model(model,
         model.train()
 
         # train loop
-        for i, (train_x, train_y, mask) in enumerate(train_tqdm):
+        for i, (train_x, train_y, mask, crf_mask) in enumerate(train_tqdm):
             # get the logits and update the gradients
             optimizer.zero_grad()
 
@@ -41,10 +41,6 @@ def train_model(model,
             if args.no_crf:
                 loss = criterion(logits.reshape(-1, num_classes).to(device), train_y.reshape(-1).to(device))
             else:
-                crf_mask = torch.tensor([mask[i][j] if train_y[i][j] != label_encoder.transform([args.null_label])[0] else 0
-                                         for i in range(train_y.shape[0]) for j in range(train_y.shape[1])],
-                                        dtype=torch.uint8).reshape(train_y.shape[0], -1).to(device)
-
                 loss = - criterion(logits.to(device), train_y, reduction="token_mean", mask=crf_mask)
 
             loss.backward()
@@ -64,17 +60,12 @@ def train_model(model,
         model.eval()
 
         # evaluation loop -> mostly same as the training loop, but without updating the parameters
-        for i, (dev_x, dev_y, mask) in enumerate(dev_tqdm):
+        for i, (dev_x, dev_y, mask, crf_mask) in enumerate(dev_tqdm):
             logits = model.forward(dev_x, mask)
 
             if args.no_crf:
                 loss = criterion(logits.reshape(-1, num_classes).to(device), dev_y.reshape(-1).to(device))
             else:
-                crf_mask = torch.tensor(
-                    [mask[i][j] if dev_y[i][j] != label_encoder.transform([args.null_label])[0] else 0
-                     for i in range(dev_y.shape[0]) for j in range(dev_y.shape[1])],
-                    dtype=torch.uint8).reshape(dev_y.shape[0], -1).to(device)
-
                 loss = - criterion(logits.to(device), dev_y, reduction="token_mean", mask=crf_mask)
 
             loss, _, _, micro_f1, _, _, macro_f1 = dev_meter.update_params(loss.item(), logits, dev_y)

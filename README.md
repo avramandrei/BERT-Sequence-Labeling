@@ -32,7 +32,7 @@ The files used for training, validation and testing must be in a format similar 
 10	.	.	PUNCT	.	_	2	punct	2:punct	_
 ```
 
-# Training
+## Training
 
 To train a model, use the `train.py` script. This will start training a model that must predict the labels of the column specified by the `[predict_column]` argument.
 

@@ -50,9 +50,10 @@ python3 predict.py [path_test_file] [model_path] [tokens_column] [predict_column
 
 ## Results
 
-## English EWT
+#### English EWT
 
 | model | upos | xpos | 
+| --- | --- | --- |
 | bert-base-cased | - | - |
 | roberta-base | - | - |
 | distilbert-base-cased | - | - |

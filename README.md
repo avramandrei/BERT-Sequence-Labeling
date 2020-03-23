@@ -13,9 +13,9 @@ cd BERT-Sequence-Labeling
 pip3 install -r requirements.txt
 ```
 
-## Train a Model
+## Input Format
 
-The files used for training and validation must be in a format similar to the [CoNLL](https://universaldependencies.org/format.html) format: 
+The files used for training, validation and testing must be in a format similar to the [CoNLL](https://universaldependencies.org/format.html): 
 
 ```
 # sent_id = email-enronsent20_01-0048
@@ -32,18 +32,19 @@ The files used for training and validation must be in a format similar to the [C
 10	.	.	PUNCT	.	_	2	punct	2:punct	_
 ```
 
-To train a model, you use the `train.py` script. You must specify the path to the train file, the path to the dev file, the tokens column, the column it must predict and the language model name from the [HuggingFace's models list](https://huggingface.co/transformers/pretrained_models.html).
+# Training
+
+To train a model, use the `train.py` script. This will start training a model that must predict the labels from the column specified by the `[predict_column]` parameter. 
 
 ```
 python3 train.py [path_train_file] [path_dev_file] [tokens_column] [predict_column] [lang_model_name]
 ```
 
-For a full list of parameters use the `--help` argument.
-
 ## Inference
 
-Use the `predict.py` script to infer new values and save them in a file. For instance, predict the POS from the [English EWT](https://universaldependencies.org/treebanks/en_ewt/index.html) test file:
+To predict new values, use the `predict.py` script. This will create a new file by replacing the predicted column of the test file with the predicted values.
 
 ```
-python3 predict.py [path_test_ewt] [model_path] 3
+python3 predict.py [path_test_file] [model_path] [tokens_column] [predict_column] [lang_model_name]
 ```
+

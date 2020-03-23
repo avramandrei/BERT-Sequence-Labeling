@@ -45,7 +45,7 @@ def main():
         list_labels.append(labels)
 
     with(open(os.path.join(args.test_path), "r", encoding='utf-8')) as in_file, \
-         open(os.path.join(args.output_path), "w", encoding='utf-8') as out_file:
+         open(os.path.join(args.output_path, "predict.conllu"), "w", encoding='utf-8') as out_file:
         sentence_idx = 0
         label_idx = 0
 
@@ -56,7 +56,7 @@ def main():
 
                     token = tokens[args.token_column]
                     subtokens = tokenizer.encode(token, add_special_tokens=False)
-                    
+
                     tokens[args.predict_column] = list_labels[sentence_idx][label_idx]
 
                     label_idx += len(subtokens)
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     parser.add_argument("predict_column", type=int)
     parser.add_argument("lang_model_name", type=str)
     parser.add_argument("--batch_size", type=int, default=32)
-    parser.add_argument("--output_path", type=str, default="output/predict.conllu")
+    parser.add_argument("--output_path", type=str, default="output")
     parser.add_argument("--separator", type=str, default="\t")
     parser.add_argument("--pad_label", type=str, default="<pad>")
     parser.add_argument("--null_label", type=str, default="<X>")

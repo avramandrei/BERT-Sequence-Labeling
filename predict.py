@@ -9,6 +9,9 @@ from transformers import *
 def main():
     device = torch.device(args.device)
 
+    if not os.path.exists(args.output_path):
+        os.makedirs(args.output_path)
+
     with open(os.path.join(args.model_path, "label_encoder.pk"), "rb") as file:
         label_encoder = pickle.load(file)
 
@@ -53,10 +56,7 @@ def main():
 
                     token = tokens[args.token_column]
                     subtokens = tokenizer.encode(token, add_special_tokens=False)
-
-                    # print(len(subtokens), label_idx)
-
-                    print(line, sentence_idx)
+                    
                     tokens[args.predict_column] = list_labels[sentence_idx][label_idx]
 
                     label_idx += len(subtokens)
@@ -80,10 +80,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("test_path")
     parser.add_argument("model_path", type=str)
+    parser.add_argument("token_column", type=int)
     parser.add_argument("predict_column", type=int)
+    parser.add_argument("lang_model_name", type=str)
     parser.add_argument("--batch_size", type=int, default=32)
-    parser.add_argument("--lang_model_name", type=str, default="bert-base-cased")
-    parser.add_argument("--token_column", type=int, default=0)
     parser.add_argument("--output_path", type=str, default="output/predict.conllu")
     parser.add_argument("--separator", type=str, default="\t")
     parser.add_argument("--pad_label", type=str, default="<pad>")

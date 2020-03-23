@@ -78,6 +78,9 @@ def train_model(model,
 
         # if the current macro F1 score is the best one -> save the model
         if macro_f1 > best_f1:
+            if not os.path.exists(args.save_path):
+                os.makedirs(args.save_path)
+
             print("Macro F1 score improved from {:.4f} -> {:.4f}. Saving model...".format(best_f1, macro_f1))
 
             best_f1 = macro_f1
@@ -137,12 +140,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("train_path", type=str, help="Path to the training file")
     parser.add_argument("dev_path", type=str, help="Path to the dev file")
+    parser.add_argument("token_column", type=int , help="The column of the tokens.")
     parser.add_argument("predict_column", type=int, help="The column that must be predicted")
-    parser.add_argument("--tokens_column", type=int, default=0, help="The column of the tokens.")
+    parser.add_argument("lang_model_name", type=str, help="Language model name of HuggingFace's implementation.")
     parser.add_argument("--batch_size", type=int, default=32, help="The batch size.")
     parser.add_argument("--epochs", type=int, default=100, help="Number of epochs.")
     parser.add_argument("--save_path", type=str, default="models", help="Where to save the model/")
-    parser.add_argument("--lang_model_name", type=str, default="bert-base-cased", help="Language model name of HuggingFace's implementation.")
     parser.add_argument("--fine_tune", action="store_true", help="Use this to fine-tune the language model's weights.")
     parser.add_argument("--max_len", type=int, default=128, help="Maximum length of the files.")
     parser.add_argument("--separator", type=str, default="\t", help="Separator of the tokens in the train/dev files.")

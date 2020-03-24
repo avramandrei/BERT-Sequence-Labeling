@@ -55,7 +55,7 @@ python3 predict.py [path_test_file] [model_path] [tokens_column] [predict_column
 | model | upos | xpos | 
 | --- | --- | --- |
 | bert-base-cased | 95.92 | 95.27 |
-| roberta-base | 95.77 | - |
+| roberta-base | 95.77 | 95.18 |
 | distilbert-base-cased | - | - |
 
 

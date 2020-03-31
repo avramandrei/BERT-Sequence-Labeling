@@ -140,7 +140,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("train_path", type=str, help="Path to the training file")
     parser.add_argument("dev_path", type=str, help="Path to the dev file")
-    parser.add_argument("token_column", type=int , help="The column of the tokens.")
+    parser.add_argument("tokens_column", type=int , help="The column of the tokens.")
     parser.add_argument("predict_column", type=int, help="The column that must be predicted")
     parser.add_argument("lang_model_name", type=str, help="Language model name of HuggingFace's implementation.")
     parser.add_argument("--batch_size", type=int, default=32, help="The batch size.")

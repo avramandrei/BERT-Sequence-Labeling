@@ -56,7 +56,16 @@ python3 predict.py [path_test_file] [model_path] [tokens_column] [predict_column
 | --- | --- | --- |
 | bert-base-cased | 95.92 | 95.27 |
 | roberta-base | 95.77 | 95.18 |
-| distilbert-base-cased | - | - |
 
+## Cite
+Please consider citing the following [paper](https://arxiv.org/abs/2009.05603) as a thank you to the authors: 
+```
+@article{avram2020upb,
+  title={UPB at SemEval-2020 Task 6: Pretrained Language Models for Definition Extraction},
+  author={Avram, Andrei-Marius and Cercel, Dumitru-Clementin and Chiru, Costin-Gabriel},
+  journal={arXiv e-prints},
+  pages={arXiv--2009},
+  year={2020}
+}
 
 
